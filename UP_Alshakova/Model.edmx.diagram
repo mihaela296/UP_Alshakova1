@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3269166229a04a55987715ae3462397a" Name="Diagram1">
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Category" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Manufacturer" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.OrderItem" Width="1.5" PointX="5.25" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Order" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Product" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Role" Width="1.5" PointX="5.75" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Supplier" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.Unit" Width="1.5" PointX="0.75" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="OOO_ObuvDoroganModel.User" Width="1.5" PointX="8" PointY="5.875" IsExpanded="true" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__Products__Catego__60A75C0F" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__Products__Manufa__619B8048" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__OrderItem__Order__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__OrderItem__Produ__5FB337D6" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__Products__Suppli__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK__Products__UnitID__6383C8BA" ManuallyRouted="false" />
+        <AssociationConnector Association="OOO_ObuvDoroganModel.FK_Users_Roles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

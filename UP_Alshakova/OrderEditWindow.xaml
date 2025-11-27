@@ -1,0 +1,63 @@
+﻿<Window x:Class="UP_Alshakova.OrderEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование заказа" 
+        Height="500" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBackgroundBrush}">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" x:Name="txtWindowTitle" Text="Редактирование заказа" 
+                   Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+        <!-- Форма редактирования -->
+        <StackPanel Grid.Row="1">
+            <!-- Артикул заказа -->
+            <TextBlock Text="Артикул заказа:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="txtOrderCode" Style="{StaticResource BaseTextBoxStyle}"/>
+
+            <!-- Статус заказа -->
+            <TextBlock Text="Статус заказа:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+            <ComboBox x:Name="cmbStatus" Style="{StaticResource BaseComboBoxStyle}">
+                <ComboBoxItem Content="Новый"/>
+                <ComboBoxItem Content="В обработке"/>
+                <ComboBoxItem Content="Отправлен"/>
+                <ComboBoxItem Content="Доставлен"/>
+                <ComboBoxItem Content="Отменен"/>
+            </ComboBox>
+
+            <!-- Адрес пункта выдачи -->
+            <TextBlock Text="Адрес пункта выдачи:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+            <TextBox x:Name="txtDeliveryAddress" Style="{StaticResource BaseTextBoxStyle}" Height="60" 
+                     TextWrapping="Wrap" AcceptsReturn="True"/>
+
+            <!-- Дата заказа -->
+            <TextBlock Text="Дата заказа:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+            <DatePicker x:Name="dpOrderDate" Style="{StaticResource BaseDatePickerStyle}"/>
+
+            <!-- Дата доставки -->
+            <TextBlock Text="Дата доставки:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+            <DatePicker x:Name="dpDeliveryDate" Style="{StaticResource BaseDatePickerStyle}"/>
+        </StackPanel>
+
+        <!-- Сообщения об ошибках -->
+        <TextBlock Grid.Row="2" x:Name="txtError" Style="{StaticResource BaseTextBlockStyle}" 
+                   Foreground="Red" Margin="0,10" TextWrapping="Wrap" Visibility="Collapsed"/>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
+            <Button x:Name="btnSave" Content="Сохранить" Click="btnSave_Click" 
+                    Style="{StaticResource AccentButtonStyle}"/>
+            <Button x:Name="btnCancel" Content="Отмена" Click="btnCancel_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>

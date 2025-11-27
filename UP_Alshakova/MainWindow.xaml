@@ -1,0 +1,44 @@
+﻿<Window x:Class="ShoeStore.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Вход в систему - ООО Обувь" 
+        Height="400" Width="500"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Icon (1).ico"
+        Background="{StaticResource PrimaryBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок с логотипом -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Image Source="/Icon (1).ico" Width="50" Height="50" Margin="0,0,10,0"/>
+            <TextBlock Text="ООО Обувь" Style="{StaticResource HeaderTextBlockStyle}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Форма входа -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="300">
+            <TextBlock Text="Вход в систему" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,0,20"/>
+
+            <TextBlock Text="Логин:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="txtLogin" Style="{StaticResource BaseTextBoxStyle}"/>
+
+            <TextBlock Text="Пароль:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+            <PasswordBox x:Name="txtPassword" Margin="5" Padding="5"/>
+
+            <Button x:Name="btnLogin" Content="Войти" Style="{StaticResource AccentButtonStyle}" 
+                    Click="btnLogin_Click" Margin="0,20,0,0"/>
+        </StackPanel>
+
+        <!-- Кнопка гостя -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="Или просмотрите товары как" Style="{StaticResource BaseTextBlockStyle}" Margin="0,0,10,0"/>
+            <Button x:Name="btnGuest" Content="Гость" Style="{StaticResource AccentButtonStyle}" 
+                    Click="btnGuest_Click"/>
+        </StackPanel>
+    </Grid> 
+</Window>

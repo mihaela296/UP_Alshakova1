@@ -1,0 +1,98 @@
+﻿<Window x:Class="UP_Alshakova.ProductsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Товары - ООО Обувь" 
+        Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка с информацией о пользователе -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Background="{StaticResource SecondaryBackgroundBrush}" 
+                    Height="50" VerticalAlignment="Center">
+            <TextBlock x:Name="txtWindowTitle" Text="Товары" Style="{StaticResource HeaderTextBlockStyle}" 
+                      VerticalAlignment="Center" Margin="10,0"/>
+
+            <Button x:Name="btnOrders" Content="Заказы" Click="btnOrders_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="20,0,0,0" Visibility="Collapsed"/>
+
+            <Button x:Name="btnAddProduct" Content="Добавить товар" Click="btnAddProduct_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0" Visibility="Collapsed"/>
+
+            <Button x:Name="btnBack" Content="Выйти" Click="btnBack_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="400,0,0,0"/>
+        </StackPanel>
+
+        <!-- Панель поиска и фильтрации -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10" x:Name="pnlSearch" Visibility="Collapsed">
+            <TextBlock Text="Поиск:" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtSearch" Width="200" Style="{StaticResource BaseTextBoxStyle}" 
+                     TextChanged="txtSearch_TextChanged"/>
+
+            <TextBlock Text="Сортировка:" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <ComboBox x:Name="cmbSort" Width="150" SelectionChanged="cmbSort_SelectionChanged">
+                <ComboBoxItem Content="По умолчанию"/>
+                <ComboBoxItem Content="Количество ↑"/>
+                <ComboBoxItem Content="Количество ↓"/>
+                <ComboBoxItem Content="Цена ↑"/>
+                <ComboBoxItem Content="Цена ↓"/>
+            </ComboBox>
+
+            <TextBlock Text="Поставщик:" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <ComboBox x:Name="cmbSupplier" Width="150" SelectionChanged="cmbSupplier_SelectionChanged"/>
+
+            <TextBlock Text="Категория:" Style="{StaticResource BaseTextBlockStyle}" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <ComboBox x:Name="cmbCategory" Width="150" SelectionChanged="cmbCategory_SelectionChanged"/>
+        </StackPanel>
+
+        <!-- Список товаров -->
+        <DataGrid Grid.Row="2" x:Name="dgProducts" AutoGenerateColumns="False" Margin="10"
+                  IsReadOnly="True" SelectionMode="Single" 
+                  MouseDoubleClick="dgProducts_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Фото" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ImagePath}" Width="50" Height="50" Stretch="Uniform"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="ID" Binding="{Binding ProductID}" Width="40"/>
+                <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="100"/>
+                <DataGridTextColumn Header="Наименование" Binding="{Binding ProductName}" Width="150"/>
+                <DataGridTextColumn Header="Производитель" Binding="{Binding Manufacturer}" Width="120"/>
+                <DataGridTextColumn Header="Поставщик" Binding="{Binding Supplier}" Width="120"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="80"/>
+                <DataGridTextColumn Header="Количество" Binding="{Binding StockQuantity}" Width="80"/>
+                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Width="60"/>
+                <DataGridTemplateColumn Header="Действия" Width="100" x:Name="colActions" Visibility="Collapsed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Удалить" Click="btnDelete_Click" 
+                                    Style="{StaticResource AccentButtonStyle}" Padding="5,2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="mnuViewDetails" Header="Просмотреть детали" Click="mnuViewDetails_Click"/>
+                    <MenuItem x:Name="mnuEditProduct" Header="Редактировать" Click="mnuEditProduct_Click" Visibility="Collapsed"/>
+                    <Separator/>
+                    <MenuItem x:Name="mnuRefresh" Header="Обновить" Click="mnuRefresh_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <!-- ФИО пользователя -->
+        <TextBlock Grid.Row="3" x:Name="txtUserInfo" HorizontalAlignment="Right" Margin="10" 
+                   Style="{StaticResource BaseTextBlockStyle}"/>
+    </Grid>
+</Window>

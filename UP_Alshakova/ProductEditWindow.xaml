@@ -1,0 +1,91 @@
+﻿<Window x:Class="UP_Alshakova.ProductEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование товара" 
+        Height="600" Width="500"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBackgroundBrush}">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="Редактирование товара" Style="{StaticResource HeaderTextBlockStyle}" 
+                   HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+        <!-- Форма редактирования -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- ID товара (только для чтения при редактировании) -->
+                <StackPanel x:Name="pnlProductID" Visibility="Collapsed">
+                    <TextBlock Text="ID товара:" Style="{StaticResource BaseTextBlockStyle}"/>
+                    <TextBox x:Name="txtProductID" Style="{StaticResource BaseTextBoxStyle}" IsReadOnly="True"/>
+                </StackPanel>
+
+                <!-- Фото товара -->
+                <TextBlock Text="Фото товара:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <Image x:Name="imgProduct"  Width="150" Height="150" 
+                       Stretch="Uniform" HorizontalAlignment="Left" Margin="0,5"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <Button x:Name="btnLoadImage" Content="Загрузить изображение" Click="btnLoadImage_Click" 
+                            Style="{StaticResource AccentButtonStyle}"/>
+                    <Button x:Name="btnRemoveImage" Content="Удалить изображение" Click="btnRemoveImage_Click" 
+                            Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <!-- Наименование товара -->
+                <TextBlock Text="Наименование товара:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtProductName" Style="{StaticResource BaseTextBoxStyle}"/>
+
+                <!-- Категория -->
+                <TextBlock Text="Категория:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <ComboBox x:Name="cmbCategory" Style="{StaticResource BaseComboBoxStyle}"/>
+
+                <!-- Описание -->
+                <TextBlock Text="Описание:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtDescription" Style="{StaticResource BaseTextBoxStyle}" Height="60" 
+                         TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                <!-- Производитель -->
+                <TextBlock Text="Производитель:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <ComboBox x:Name="cmbManufacturer" Style="{StaticResource BaseComboBoxStyle}"/>
+
+                <!-- Поставщик -->
+                <TextBlock Text="Поставщик:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <ComboBox x:Name="cmbSupplier" Style="{StaticResource BaseComboBoxStyle}"/>
+
+                <!-- Цена -->
+                <TextBlock Text="Цена:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtPrice" Style="{StaticResource BaseTextBoxStyle}"/>
+
+                <!-- Единица измерения -->
+                <TextBlock Text="Единица измерения:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <ComboBox x:Name="cmbUnit" Style="{StaticResource BaseComboBoxStyle}"/>
+                <!-- Количество на складе -->
+                <TextBlock Text="Количество на складе:" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtStockQuantity" Style="{StaticResource BaseTextBoxStyle}"/>
+
+                <!-- Скидка -->
+                <TextBlock Text="Скидка (%):" Style="{StaticResource BaseTextBlockStyle}" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtDiscount" Style="{StaticResource BaseTextBoxStyle}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Сообщения об ошибках -->
+        <TextBlock Grid.Row="2" x:Name="txtError" Style="{StaticResource BaseTextBlockStyle}" 
+                   Foreground="Red" Margin="0,10" TextWrapping="Wrap" Visibility="Collapsed"/>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
+            <Button x:Name="btnSave" Content="Сохранить" Click="btnSave_Click" 
+                    Style="{StaticResource AccentButtonStyle}"/>
+            <Button x:Name="btnCancel" Content="Отмена" Click="btnCancel_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
