@@ -18,7 +18,7 @@ namespace UP_Alshakova
             InitializeComponent();
             _userName = userName;
             _userId = userId;
-            txtUserInfo.Text = _userName;
+            txtUserInfoHeader.Text = _userName;
             LoadProducts();
         }
 
@@ -44,17 +44,14 @@ namespace UP_Alshakova
                         Manufacturer = p.Manufacturer.ManufacturerName,
                         Supplier = p.Supplier.SupplierName,
                         Price = p.Price,
-                        FinalPrice = p.Price * (1 - ((p.Discount ?? 0) / 100)),
+                        FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
                         UnitName = p.Unit.UnitName,
                         StockQuantity = p.StockQuantity,
                         Discount = p.Discount ?? 0,
+                        HasDiscount = (p.Discount ?? 0) > 0,
                         ImagePath = string.IsNullOrEmpty(p.ImagePath) ?
                                    "Images/picture.png" : p.ImagePath,
-                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity),
-                        PriceDecoration = (p.Discount ?? 0) > 0 ?
-                                        TextDecorations.Strikethrough : null,
-                        FinalPriceVisibility = (p.Discount ?? 0) > 0 ?
-                                             Visibility.Visible : Visibility.Collapsed
+                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
                     }).ToList();
 
                     itemsProducts.ItemsSource = productList;

@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Шапка -->
@@ -18,8 +17,13 @@
                     Height="50" VerticalAlignment="Center">
             <TextBlock Text="Просмотр товаров - Гость" Style="{StaticResource HeaderTextBlockStyle}" 
                       VerticalAlignment="Center" Margin="10,0"/>
+
+            <!-- ФИО пользователя -->
+            <TextBlock x:Name="txtUserInfoHeader" Text="Гость" Style="{StaticResource BaseTextBlockStyle}" 
+                      VerticalAlignment="Center" Margin="300,0,0,0" FontWeight="Bold"/>
+
             <Button x:Name="btnBack" Content="Назад" Click="btnBack_Click" 
-                    Style="{StaticResource AccentButtonStyle}" Margin="400,0,0,0"/>
+                    Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0"/>
         </StackPanel>
 
         <!-- Список товаров -->
@@ -33,11 +37,14 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="150"/>
                                 </Grid.ColumnDefinitions>
 
+                                <!-- Фото товара -->
                                 <Image Grid.Column="0" Source="{Binding ImagePath}" Width="80" Height="80" 
                                        Stretch="Uniform"/>
 
+                                <!-- Основная информация -->
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding CategoryName}" FontWeight="Bold" 
                                                Style="{StaticResource BaseTextBlockStyle}"/>
@@ -49,22 +56,20 @@
                                                Style="{StaticResource BaseTextBlockStyle}"/>
                                     <TextBlock Text="{Binding Supplier}" 
                                                Style="{StaticResource BaseTextBlockStyle}"/>
+                                </StackPanel>
 
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock x:Name="txtOriginalPrice" Text="{Binding Price}" 
-                                                   Style="{StaticResource BaseTextBlockStyle}"
-                                                   TextDecorations="{Binding PriceDecoration}"/>
-                                        <TextBlock x:Name="txtFinalPrice" Text="{Binding FinalPrice}" 
-                                                   Style="{StaticResource BaseTextBlockStyle}" 
-                                                   Visibility="{Binding FinalPriceVisibility}"
-                                                   Margin="10,0,0,0"/>
-                                    </StackPanel>
+                                <!-- Цены и информация справа (как в макете) -->
+                                <StackPanel Grid.Column="2" Margin="10,0,0,0" HorizontalAlignment="Right">
+                                    <!-- Актуальная цена -->
+                                    <TextBlock x:Name="txtFinalPrice" 
+                                               Text="{Binding FinalPrice, StringFormat={}{0:0.00}}"
+                                               Style="{StaticResource BaseTextBlockStyle}"
+                                               FontWeight="Bold"/>
 
+                                    <!-- Количество и единица измерения -->
                                     <TextBlock Text="{Binding UnitName}" 
                                                Style="{StaticResource BaseTextBlockStyle}"/>
-                                    <TextBlock Text="{Binding StockQuantity}" 
-                                               Style="{StaticResource BaseTextBlockStyle}"/>
-                                    <TextBlock Text="{Binding Discount}" 
+                                    <TextBlock Text="{Binding StockQuantity, StringFormat={}{0} шт.}" 
                                                Style="{StaticResource BaseTextBlockStyle}"/>
                                 </StackPanel>
                             </Grid>
@@ -73,9 +78,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-
-        <!-- ФИО пользователя -->
-        <TextBlock Grid.Row="2" x:Name="txtUserInfo" HorizontalAlignment="Right" Margin="10" 
-                   Style="{StaticResource BaseTextBlockStyle}"/>
     </Grid>
 </Window>

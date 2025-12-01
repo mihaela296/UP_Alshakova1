@@ -1,6 +1,6 @@
 ﻿using ShoeStore;
 using System.Collections.ObjectModel;
-using System.Data.Entity; // для Entity Framework
+using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 
@@ -12,7 +12,7 @@ namespace UP_Alshakova
         {
             InitializeComponent();
             LoadProducts();
-            txtUserInfo.Text = "Гость";
+            txtUserInfoHeader.Text = "Гость";
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -28,7 +28,6 @@ namespace UP_Alshakova
             {
                 using (var context = new Entities())
                 {
-                    // Загружаем товары из БД через Entity Framework
                     var products = context.Products
                         .Include(p => p.Category)
                         .Include(p => p.Manufacturer)
@@ -36,7 +35,6 @@ namespace UP_Alshakova
                         .Include(p => p.Unit)
                         .ToList();
 
-                    // Преобразуем в коллекцию для отображения
                     var productList = products.Select(p => new
                     {
                         ProductID = p.ProductID,
@@ -46,17 +44,13 @@ namespace UP_Alshakova
                         Manufacturer = p.Manufacturer.ManufacturerName,
                         Supplier = p.Supplier.SupplierName,
                         Price = p.Price,
-                        FinalPrice = p.Price * (1 - ((p.Discount ?? 0) / 100)),
+                        FinalPrice = System.Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
                         UnitName = p.Unit.UnitName,
-                        StockQuantity = p.StockQuantity, // Просто значение, без ??
+                        StockQuantity = p.StockQuantity,
                         Discount = p.Discount ?? 0,
                         ImagePath = string.IsNullOrEmpty(p.ImagePath) ?
                                    "Images/picture.png" : p.ImagePath,
-                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity), // Без ?? для StockQuantity
-                        PriceDecoration = (p.Discount ?? 0) > 0 ?
-                                        TextDecorations.Strikethrough : null,
-                        FinalPriceVisibility = (p.Discount ?? 0) > 0 ?
-                                             Visibility.Visible : Visibility.Collapsed
+                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
                     }).ToList();
 
                     itemsProducts.ItemsSource = productList;

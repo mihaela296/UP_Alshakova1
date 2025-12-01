@@ -19,12 +19,12 @@ namespace UP_Alshakova
             _userName = userName;
             InitializePermissions();
             LoadOrders();
-            txtUserInfo.Text = _userName;
+            txtUserInfoHeader.Text = _userName;
         }
 
         private void InitializePermissions()
         {
-            // Только администратор может добавлять/редактировать/удалять заказы
+            // Только администратор может добавлять/удалять заказы
             if (_userRole == "Admin")
             {
                 btnAddOrder.Visibility = Visibility.Visible;
@@ -53,9 +53,7 @@ namespace UP_Alshakova
                             Status = o.Status,
                             DeliveryAddress = o.DeliveryAddress,
                             OrderDate = o.OrderDate,
-                            DeliveryDate = o.DeliveryDate,
-                            // Убираем TotalAmount если нет UnitPrice в OrderItems
-                            // TotalAmount = o.OrderItems.Sum(oi => oi.Quantity * oi.UnitPrice)
+                            DeliveryDate = o.DeliveryDate
                         }).ToList()
                     );
 
@@ -71,9 +69,27 @@ namespace UP_Alshakova
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            ProductsWindow productsWindow = new ProductsWindow(_userRole, _userName);
-            productsWindow.Show();
-            this.Close();
+            // Возвращаемся в соответствующее окно в зависимости от роли
+            Window productsWindow = null;
+
+            switch (_userRole)
+            {
+                case "Admin":
+                    productsWindow = new AdminWindow(_userName);
+                    break;
+                case "Manager":
+                    productsWindow = new ManagerWindow(_userName);
+                    break;
+                case "Client":
+                    productsWindow = new ClientWindow(_userName);
+                    break;
+            }
+
+            if (productsWindow != null)
+            {
+                productsWindow.Show();
+                this.Close();
+            }
         }
 
         private void btnAddOrder_Click(object sender, RoutedEventArgs e)
@@ -87,6 +103,7 @@ namespace UP_Alshakova
 
         private void dgOrders_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            // Редактирование заказа открывается только по двойному клику
             if (_userRole == "Admin" && dgOrders.SelectedItem != null)
             {
                 dynamic selectedOrder = dgOrders.SelectedItem;
@@ -98,30 +115,25 @@ namespace UP_Alshakova
             }
         }
 
-        private void btnEditOrder_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext != null)
-            {
-                dynamic order = button.DataContext;
-                OrderEditWindow editWindow = new OrderEditWindow(order.OrderID);
-                if (editWindow.ShowDialog() == true)
-                {
-                    LoadOrders();
-                }
-            }
-        }
-
         private void btnDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext != null)
+            if (sender is Button button && button.Tag != null)
             {
-                dynamic order = button.DataContext;
-                int orderId = order.OrderID;
+                int orderId = (int)button.Tag;
 
-                if (MessageBox.Show($"Вы уверены, что хотите удалить заказ '{order.OrderCode}'?",
-                    "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                using (var context = new Entities())
                 {
-                    DeleteOrder(orderId);
+                    var order = context.Orders.Find(orderId);
+                    if (order != null)
+                    {
+                        var orderCode = order.OrderCode;
+
+                        if (MessageBox.Show($"Вы уверены, что хотите удалить заказ '{orderCode}'?",
+                            "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            DeleteOrder(orderId);
+                        }
+                    }
                 }
             }
         }

@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Шапка -->
@@ -22,8 +21,12 @@
             <Button x:Name="btnAddOrder" Content="Добавить заказ" Click="btnAddOrder_Click" 
                     Style="{StaticResource AccentButtonStyle}" Margin="20,0,0,0" Visibility="Collapsed"/>
 
+            <!-- ФИО пользователя -->
+            <TextBlock x:Name="txtUserInfoHeader" Style="{StaticResource BaseTextBlockStyle}" 
+                      VerticalAlignment="Center" Margin="300,0,0,0" FontWeight="Bold"/>
+
             <Button x:Name="btnBack" Content="Назад к товарам" Click="btnBack_Click" 
-                    Style="{StaticResource AccentButtonStyle}" Margin="400,0,0,0"/>
+                    Style="{StaticResource AccentButtonStyle}" Margin="10,0,0,0"/>
         </StackPanel>
 
         <!-- Список заказов -->
@@ -40,21 +43,16 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="✏️" Click="btnEditOrder_Click" 
-                                        Style="{StaticResource AccentButtonStyle}" Padding="5,2" 
-                                        ToolTip="Редактировать"/>
+                                <!-- Убрана кнопка редактирования, редактирование только по двойному клику -->
                                 <Button Content="🗑️" Click="btnDeleteOrder_Click" 
                                         Style="{StaticResource AccentButtonStyle}" Padding="5,2" Margin="5,0,0,0"
-                                        ToolTip="Удалить"/>
+                                        ToolTip="Удалить"
+                                        Tag="{Binding OrderID}"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
-        <!-- ФИО пользователя -->
-        <TextBlock Grid.Row="2" x:Name="txtUserInfo" HorizontalAlignment="Right" Margin="10" 
-                   Style="{StaticResource BaseTextBlockStyle}"/>
     </Grid>
 </Window>

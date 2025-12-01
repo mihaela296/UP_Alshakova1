@@ -21,7 +21,7 @@ namespace UP_Alshakova
             InitializeComponent();
             _userName = userName;
             _userId = userId;
-            txtUserInfo.Text = _userName;
+            txtUserInfoHeader.Text = _userName;
             LoadProducts();
             LoadFilters();
         }
@@ -49,7 +49,7 @@ namespace UP_Alshakova
                             Manufacturer = p.Manufacturer.ManufacturerName,
                             Supplier = p.Supplier.SupplierName,
                             Price = p.Price,
-                            FinalPrice = p.Price * (1 - ((p.Discount ?? 0) / 100)),
+                            FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
                             UnitName = p.Unit.UnitName,
                             StockQuantity = p.StockQuantity,
                             Discount = p.Discount ?? 0,
@@ -60,7 +60,7 @@ namespace UP_Alshakova
                     );
 
                     _filteredProducts = new ObservableCollection<dynamic>(_allProducts);
-                    dgProducts.ItemsSource = _filteredProducts;
+                    itemsProducts.ItemsSource = _filteredProducts;
                 }
             }
             catch (Exception ex)
@@ -129,30 +129,25 @@ namespace UP_Alshakova
             this.Close();
         }
 
-        private void dgProducts_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (dgProducts.SelectedItem != null)
-            {
-                dynamic selectedProduct = dgProducts.SelectedItem;
-                ProductEditWindow editWindow = new ProductEditWindow(selectedProduct.ProductID);
-                if (editWindow.ShowDialog() == true)
-                {
-                    LoadProducts();
-                }
-            }
-        }
-
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext != null)
+            if (sender is Button button && button.Tag != null)
             {
-                dynamic product = button.DataContext;
-                int productId = product.ProductID;
+                int productId = (int)button.Tag;
 
-                if (MessageBox.Show($"Вы уверены, что хотите удалить товар '{product.ProductName}'?",
-                    "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                using (var context = new Entities())
                 {
-                    DeleteProduct(productId);
+                    var product = context.Products.Find(productId);
+                    if (product != null)
+                    {
+                        var productName = product.ProductName;
+
+                        if (MessageBox.Show($"Вы уверены, что хотите удалить товар '{productName}'?",
+                            "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            DeleteProduct(productId);
+                        }
+                    }
                 }
             }
         }
@@ -222,15 +217,11 @@ namespace UP_Alshakova
                 filtered = filtered.Where(p => p.Supplier == selectedSupplier);
             }
 
-            // Сортировка
+            // Сортировка (только по количеству)
             if (cmbSort.SelectedIndex == 1) // Количество ↑
                 filtered = filtered.OrderBy(p => p.StockQuantity);
             else if (cmbSort.SelectedIndex == 2) // Количество ↓
                 filtered = filtered.OrderByDescending(p => p.StockQuantity);
-            else if (cmbSort.SelectedIndex == 3) // Цена ↑
-                filtered = filtered.OrderBy(p => p.Price);
-            else if (cmbSort.SelectedIndex == 4) // Цена ↓
-                filtered = filtered.OrderByDescending(p => p.Price);
 
             _filteredProducts.Clear();
             foreach (var product in filtered)

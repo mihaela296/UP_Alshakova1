@@ -21,7 +21,7 @@ namespace UP_Alshakova
             InitializeComponent();
             _userName = userName;
             _userId = userId;
-            txtUserInfo.Text = _userName;
+            txtUserInfoHeader.Text = _userName;
             LoadProducts();
             LoadFilters();
         }
@@ -49,7 +49,7 @@ namespace UP_Alshakova
                             Manufacturer = p.Manufacturer.ManufacturerName,
                             Supplier = p.Supplier.SupplierName,
                             Price = p.Price,
-                            FinalPrice = p.Price * (1 - ((p.Discount ?? 0) / 100)),
+                            FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
                             UnitName = p.Unit.UnitName,
                             StockQuantity = p.StockQuantity,
                             Discount = p.Discount ?? 0,
@@ -60,7 +60,7 @@ namespace UP_Alshakova
                     );
 
                     _filteredProducts = new ObservableCollection<dynamic>(_allProducts);
-                    dgProducts.ItemsSource = _filteredProducts;
+                    itemsProducts.ItemsSource = _filteredProducts;
                 }
             }
             catch (Exception ex)
@@ -161,7 +161,7 @@ namespace UP_Alshakova
                 filtered = filtered.Where(p => p.Supplier == selectedSupplier);
             }
 
-            // Сортировка
+            // Сортировка (только по количеству)
             if (cmbSort.SelectedIndex == 1) // Количество ↑
                 filtered = filtered.OrderBy(p => p.StockQuantity);
             else if (cmbSort.SelectedIndex == 2) // Количество ↓
