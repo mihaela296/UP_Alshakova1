@@ -13,8 +13,8 @@ namespace UP_Alshakova
     {
         private string _userName;
         private int _userId;
-        private ObservableCollection<dynamic> _allProducts;
-        private ObservableCollection<dynamic> _filteredProducts;
+        private ObservableCollection<ProductViewModel> _allProducts;
+        private ObservableCollection<ProductViewModel> _filteredProducts;
 
         public ManagerWindow(string userName, int userId = 0)
         {
@@ -22,6 +22,11 @@ namespace UP_Alshakova
             _userName = userName;
             _userId = userId;
             txtUserInfoHeader.Text = _userName;
+
+            _allProducts = new ObservableCollection<ProductViewModel>();
+            _filteredProducts = new ObservableCollection<ProductViewModel>();
+            itemsProducts.ItemsSource = _filteredProducts;
+
             LoadProducts();
             LoadFilters();
         }
@@ -39,28 +44,32 @@ namespace UP_Alshakova
                         .Include(p => p.Unit)
                         .ToList();
 
-                    _allProducts = new ObservableCollection<dynamic>(
-                        products.Select(p => new
+                    _allProducts.Clear();
+                    _filteredProducts.Clear();
+
+                    foreach (var p in products)
+                    {
+                        var productVM = new ProductViewModel
                         {
                             ProductID = p.ProductID,
-                            ProductName = p.ProductName,
-                            CategoryName = p.Category.CategoryName,
-                            Description = p.Description,
-                            Manufacturer = p.Manufacturer.ManufacturerName,
-                            Supplier = p.Supplier.SupplierName,
+                            ProductName = p.ProductName ?? "Без названия",
+                            CategoryName = p.Category?.CategoryName ?? "Не указано",
+                            Description = p.Description ?? "Описание отсутствует",
+                            Manufacturer = p.Manufacturer?.ManufacturerName ?? "Не указано",
+                            Supplier = p.Supplier?.SupplierName ?? "Не указано",
                             Price = p.Price,
                             FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
-                            UnitName = p.Unit.UnitName,
+                            UnitName = p.Unit?.UnitName ?? "шт.",
                             StockQuantity = p.StockQuantity,
                             Discount = p.Discount ?? 0,
-                            ImagePath = string.IsNullOrEmpty(p.ImagePath) ?
-                                       "Images/picture.png" : p.ImagePath,
+                            HasDiscount = (p.Discount ?? 0) > 0,
+                            ImagePath = p.ImagePath,
                             BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
-                        }).ToList()
-                    );
+                        };
 
-                    _filteredProducts = new ObservableCollection<dynamic>(_allProducts);
-                    itemsProducts.ItemsSource = _filteredProducts;
+                        _allProducts.Add(productVM);
+                        _filteredProducts.Add(productVM);
+                    }
                 }
             }
             catch (Exception ex)
@@ -72,7 +81,6 @@ namespace UP_Alshakova
 
         private void LoadFilters()
         {
-            // Загрузка поставщиков
             cmbSupplier.Items.Clear();
             cmbSupplier.Items.Add("Все поставщики");
 
@@ -147,11 +155,11 @@ namespace UP_Alshakova
             {
                 string searchText = txtSearch.Text.ToLower();
                 filtered = filtered.Where(p =>
-                    p.ProductName.ToLower().Contains(searchText) ||
-                    p.CategoryName.ToLower().Contains(searchText) ||
-                    p.Description.ToLower().Contains(searchText) ||
-                    p.Manufacturer.ToLower().Contains(searchText) ||
-                    p.Supplier.ToLower().Contains(searchText));
+                    (p.ProductName?.ToLower() ?? "").Contains(searchText) ||
+                    (p.CategoryName?.ToLower() ?? "").Contains(searchText) ||
+                    (p.Description?.ToLower() ?? "").Contains(searchText) ||
+                    (p.Manufacturer?.ToLower() ?? "").Contains(searchText) ||
+                    (p.Supplier?.ToLower() ?? "").Contains(searchText));
             }
 
             // Фильтрация по поставщику
@@ -161,7 +169,7 @@ namespace UP_Alshakova
                 filtered = filtered.Where(p => p.Supplier == selectedSupplier);
             }
 
-            // Сортировка (только по количеству)
+            // Сортировка
             if (cmbSort.SelectedIndex == 1) // Количество ↑
                 filtered = filtered.OrderBy(p => p.StockQuantity);
             else if (cmbSort.SelectedIndex == 2) // Количество ↓

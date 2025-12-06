@@ -8,9 +8,14 @@ namespace UP_Alshakova
 {
     public partial class GuestWindow : Window
     {
+        private ObservableCollection<ProductViewModel> _products;
+
         public GuestWindow()
         {
             InitializeComponent();
+            _products = new ObservableCollection<ProductViewModel>();
+            itemsProducts.ItemsSource = _products;
+
             LoadProducts();
             txtUserInfoHeader.Text = "Гость";
         }
@@ -35,25 +40,30 @@ namespace UP_Alshakova
                         .Include(p => p.Unit)
                         .ToList();
 
-                    var productList = products.Select(p => new
-                    {
-                        ProductID = p.ProductID,
-                        ProductName = p.ProductName,
-                        CategoryName = p.Category.CategoryName,
-                        Description = p.Description,
-                        Manufacturer = p.Manufacturer.ManufacturerName,
-                        Supplier = p.Supplier.SupplierName,
-                        Price = p.Price,
-                        FinalPrice = System.Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
-                        UnitName = p.Unit.UnitName,
-                        StockQuantity = p.StockQuantity,
-                        Discount = p.Discount ?? 0,
-                        ImagePath = string.IsNullOrEmpty(p.ImagePath) ?
-                                   "Images/picture.png" : p.ImagePath,
-                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
-                    }).ToList();
+                    _products.Clear();
 
-                    itemsProducts.ItemsSource = productList;
+                    foreach (var p in products)
+                    {
+                        var productVM = new ProductViewModel
+                        {
+                            ProductID = p.ProductID,
+                            ProductName = p.ProductName ?? "Без названия",
+                            CategoryName = p.Category?.CategoryName ?? "Не указано",
+                            Description = p.Description ?? "Описание отсутствует",
+                            Manufacturer = p.Manufacturer?.ManufacturerName ?? "Не указано",
+                            Supplier = p.Supplier?.SupplierName ?? "Не указано",
+                            Price = p.Price,
+                            FinalPrice = System.Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
+                            UnitName = p.Unit?.UnitName ?? "шт.",
+                            StockQuantity = p.StockQuantity,
+                            Discount = p.Discount ?? 0,
+                            HasDiscount = (p.Discount ?? 0) > 0,
+                            ImagePath = p.ImagePath, // Будет автоматически загружено изображение
+                            BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
+                        };
+
+                        _products.Add(productVM);
+                    }
                 }
             }
             catch (System.Exception ex)

@@ -1,10 +1,9 @@
 ﻿using ShoeStore;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
 
 namespace UP_Alshakova
 {
@@ -12,6 +11,7 @@ namespace UP_Alshakova
     {
         private string _userName;
         private int _userId;
+        private ObservableCollection<ProductViewModel> _products;
 
         public ClientWindow(string userName, int userId = 0)
         {
@@ -19,6 +19,10 @@ namespace UP_Alshakova
             _userName = userName;
             _userId = userId;
             txtUserInfoHeader.Text = _userName;
+
+            _products = new ObservableCollection<ProductViewModel>();
+            itemsProducts.ItemsSource = _products;
+
             LoadProducts();
         }
 
@@ -35,26 +39,30 @@ namespace UP_Alshakova
                         .Include(p => p.Unit)
                         .ToList();
 
-                    var productList = products.Select(p => new
-                    {
-                        ProductID = p.ProductID,
-                        ProductName = p.ProductName,
-                        CategoryName = p.Category.CategoryName,
-                        Description = p.Description,
-                        Manufacturer = p.Manufacturer.ManufacturerName,
-                        Supplier = p.Supplier.SupplierName,
-                        Price = p.Price,
-                        FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
-                        UnitName = p.Unit.UnitName,
-                        StockQuantity = p.StockQuantity,
-                        Discount = p.Discount ?? 0,
-                        HasDiscount = (p.Discount ?? 0) > 0,
-                        ImagePath = string.IsNullOrEmpty(p.ImagePath) ?
-                                   "Images/picture.png" : p.ImagePath,
-                        BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
-                    }).ToList();
+                    _products.Clear();
 
-                    itemsProducts.ItemsSource = productList;
+                    foreach (var p in products)
+                    {
+                        var productVM = new ProductViewModel
+                        {
+                            ProductID = p.ProductID,
+                            ProductName = p.ProductName ?? "Без названия",
+                            CategoryName = p.Category?.CategoryName ?? "Не указано",
+                            Description = p.Description ?? "Описание отсутствует",
+                            Manufacturer = p.Manufacturer?.ManufacturerName ?? "Не указано",
+                            Supplier = p.Supplier?.SupplierName ?? "Не указано",
+                            Price = p.Price,
+                            FinalPrice = Math.Round(p.Price * (1 - ((p.Discount ?? 0) / 100)), 2),
+                            UnitName = p.Unit?.UnitName ?? "шт.",
+                            StockQuantity = p.StockQuantity,
+                            Discount = p.Discount ?? 0,
+                            HasDiscount = (p.Discount ?? 0) > 0,
+                            ImagePath = p.ImagePath, // Будет автоматически загружено изображение
+                            BackgroundColor = GetBackgroundColor(p.Discount ?? 0, p.StockQuantity)
+                        };
+
+                        _products.Add(productVM);
+                    }
                 }
             }
             catch (Exception ex)
@@ -64,14 +72,14 @@ namespace UP_Alshakova
             }
         }
 
-        private SolidColorBrush GetBackgroundColor(decimal discount, int stockQuantity)
+        private System.Windows.Media.SolidColorBrush GetBackgroundColor(decimal discount, int stockQuantity)
         {
             if (stockQuantity == 0)
-                return (SolidColorBrush)FindResource("OutOfStockBrush");
+                return (System.Windows.Media.SolidColorBrush)FindResource("OutOfStockBrush");
             if (discount > 15)
-                return (SolidColorBrush)FindResource("HighDiscountBrush");
+                return (System.Windows.Media.SolidColorBrush)FindResource("HighDiscountBrush");
 
-            return (SolidColorBrush)FindResource("PrimaryBackgroundBrush");
+            return (System.Windows.Media.SolidColorBrush)FindResource("PrimaryBackgroundBrush");
         }
 
         private void btnProfile_Click(object sender, RoutedEventArgs e)
